@@ -1,11 +1,7 @@
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.sound.sampled.*;
-
 import javax.swing.*;
-
-import javafx.scene.text.Font;
 
 /**
  * MainWindow
@@ -19,7 +15,6 @@ public class MainWindow extends JFrame {
     }
     
     private void guiInit() {
-
         JButton encode = new JButton("Encode");
         JButton decode = new JButton("Decode");
         JButton play = new JButton("\u25B6");
@@ -59,6 +54,14 @@ public class MainWindow extends JFrame {
                 } else {
                     JOptionPane.showMessageDialog(null, "Incorrect input format");
                 }
+            }
+        });
+
+        play.addActionListener(new ActionListener(){
+        
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Morse.playMorseSequence(output.getText());
             }
         });
 

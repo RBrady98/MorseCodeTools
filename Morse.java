@@ -1,3 +1,6 @@
+import java.io.*;
+import javax.sound.sampled.*;
+
 /**
  * Morse
  */ 
@@ -46,5 +49,29 @@ public class Morse {
             }
         }
         return index;
+    }
+
+    public static void playMorseSequence(String morseSequence) {
+        String englishFromMorse = morseToEnglish(morseSequence).toUpperCase();
+        String basePath = new File("").getAbsolutePath();
+        char[] letters = englishFromMorse.toCharArray();
+        for (char c : letters) {
+            String fileName = basePath + "\\sound\\" + c + ".wav";
+            try {
+                File file = new File(fileName);
+                AudioInputStream audioIn = AudioSystem.getAudioInputStream(file);
+                Clip clip = AudioSystem.getClip();
+                clip.open(audioIn);
+                clip.start();
+                
+                System.out.println("currently playing: " + fileName);
+            } catch (UnsupportedAudioFileException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (LineUnavailableException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
