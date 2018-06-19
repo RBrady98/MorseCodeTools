@@ -34,7 +34,7 @@ public class MainWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String inputString = input.getText();
-                if(inputString.matches("[a-z ]{1,}")) {
+                if(inputString.matches("[a-zA-Z ]{1,}")) {
                     String outputString = Morse.englishToMorse(inputString);
                     output.setText(outputString);
                 } else {
@@ -61,7 +61,12 @@ public class MainWindow extends JFrame {
         
             @Override
             public void actionPerformed(ActionEvent e) {
-                Morse.playMorseSequence(output.getText());
+                String morse = output.getText();
+                if(morse.matches("[\\.\\-\\/ ]{1,}")) {
+                    Morse.playMorseSequence(morse);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Unable to play, incorrect format of morse sequence");
+                }
             }
         });
 

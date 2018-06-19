@@ -31,7 +31,7 @@ public class Morse {
     public static String englishToMorse(String input) {
         String result = "";
         for (int i = 0; i < input.length(); i++) {
-            char c = input.charAt(i);
+            char c = input.toLowerCase().charAt(i);
             if(c != ' ') {
                 result += morseAlphabet[((int) c) - 97] + " ";
             } else {
@@ -52,10 +52,19 @@ public class Morse {
     }
 
     public static void playMorseSequence(String morseSequence) {
-        String englishFromMorse = morseToEnglish(morseSequence).toUpperCase();
+        String englishFromMorse = morseToEnglish(morseSequence).toUpperCase().trim();
         String basePath = new File("").getAbsolutePath();
         char[] letters = englishFromMorse.toCharArray();
         for (char c : letters) {
+            if (c == ' ') {
+                try {
+                    Thread.sleep(1000);
+                    continue;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
             String fileName = basePath + "\\sound\\" + c + ".wav";
             try {
                 File file = new File(fileName);
@@ -63,6 +72,7 @@ public class Morse {
                 Clip clip = AudioSystem.getClip();
                 clip.open(audioIn);
                 clip.start();
+                Thread.sleep(1250);
                 
                 System.out.println("currently playing: " + fileName);
             } catch (UnsupportedAudioFileException e) {
@@ -70,6 +80,8 @@ public class Morse {
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (LineUnavailableException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
