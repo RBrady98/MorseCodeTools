@@ -15,6 +15,7 @@ public class MainWindow extends JFrame {
     }
     
     private void guiInit() {
+        //Create buttons and text windows
         JButton encode = new JButton("Encode");
         JButton decode = new JButton("Decode");
         JButton play = new JButton("\u25B6");
@@ -76,7 +77,7 @@ public class MainWindow extends JFrame {
         add(input);
         add(output);
         setSize(400, 400);
-        getContentPane().setBackground(Color.LIGHT_GRAY);
+        getContentPane().setBackground(new Color(66, 155, 244));
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(null);

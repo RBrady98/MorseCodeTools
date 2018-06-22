@@ -2,7 +2,7 @@ import java.io.*;
 import javax.sound.sampled.*;
 
 /**
- * Morse
+ * Morse class for encoding, decoding and playing morse code sequences
  */ 
 public class Morse {
     private static final String[] morseAlphabet = {
@@ -10,18 +10,25 @@ public class Morse {
         "--.", "....", "..", ".---", "-.-", ".-..", // g-l
         "--", "-.", "---", ".--.", "--.-", ".-.", // m-r
         "...", "-", "..-", "...-", ".--", "-..-", // s-x
-        "-.--", "--.." //y y-z
+        "-.--", "--.." //y-z
     };
     
     public static String morseToEnglish(String input) {
+        input = input.trim();
         String[] morseWords = input.split("\\/");
         String result = "";
+        //loop through each morse word in the word array
         for (String morseWord : morseWords) {
             String[] morseLetters = morseWord.trim().split(" ");
+            //loop through each morse letter in the morse word and find its english letter equivalent
             for (String letter : morseLetters) {
-                int morseIndex =  searchForLetter(letter);
-                char englishLetter = (char)(morseIndex + 97);
-                result += englishLetter;
+                int morseIndex =  getLetterIndex(letter);
+                if(morseIndex == -1) {
+                    result += "INVALID ";
+                } else {
+                    char englishLetter = (char)(morseIndex + 97);
+                    result += englishLetter;
+                }
             }
             result += " ";
         }
@@ -29,6 +36,7 @@ public class Morse {
     }
 
     public static String englishToMorse(String input) {
+        input = input.trim();
         String result = "";
         for (int i = 0; i < input.length(); i++) {
             char c = input.toLowerCase().charAt(i);
@@ -41,8 +49,8 @@ public class Morse {
         return result;
     }
 
-    private static int searchForLetter(String morse) {
-        int index = 0;
+    private static int getLetterIndex(String morse) {
+        int index = -1;
         for (int i = 0; i < morseAlphabet.length; i++) {
             if(morseAlphabet[i].equals(morse)) {
                 index = i;
@@ -53,37 +61,40 @@ public class Morse {
 
     public static void playMorseSequence(String morseSequence) {
         String englishFromMorse = morseToEnglish(morseSequence).toUpperCase().trim();
-        String basePath = new File("").getAbsolutePath();
         char[] letters = englishFromMorse.toCharArray();
         for (char c : letters) {
             if (c == ' ') {
                 try {
+                    // Wait between words and go to the next iteration of the loop
                     Thread.sleep(1000);
                     continue;
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-            }
-
-            String fileName = basePath + "\\sound\\" + c + ".wav";
-            try {
-                File file = new File(fileName);
-                AudioInputStream audioIn = AudioSystem.getAudioInputStream(file);
-                Clip clip = AudioSystem.getClip();
-                clip.open(audioIn);
-                clip.start();
-                Thread.sleep(1250);
-                
-                System.out.println("currently playing: " + fileName);
-            } catch (UnsupportedAudioFileException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (LineUnavailableException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            } else {
+                // All sound files named as letter.wav eg A.wav, char is then used in the file path string
+                // Get file system path to the sound folder
+                String basePath = new File("").getAbsolutePath();
+                String fileName = basePath + "\\sound\\" + c + ".wav";
+                try {
+                    System.out.println("currently playing: " + fileName);
+                    File file = new File(fileName);
+                    AudioInputStream audioIn = AudioSystem.getAudioInputStream(file);
+                    Clip clip = AudioSystem.getClip();
+                    clip.open(audioIn);
+                    clip.start();
+                    Thread.sleep(1250);
+                } catch (UnsupportedAudioFileException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (LineUnavailableException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
+
     }
 }
